@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Cyxtera Test</string>
     <string name="title_login">Cyxtera Login</string>
+    <string name="title_list">Attempts</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="button_login">Login</string>
@@ -12,4 +13,7 @@
     <string name="button_no">No</string>
     <string name="description_inserted_user">User data saved</string>
     <string name="error_bad_credentials">Bad credentials error</string>
+    <string name="description_attempt" formatted="true">Attempt date: %s type: %s</string>
+    <string name="description_success">Success</string>
+    <string name="description_wrong">Wrong</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.cyxteratest.presentation.activities
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                         when(userState) {
                             is UserState.notFoundUser -> showNotFoundUserDialog()
                             is UserState.insertedUser -> saveAttemptInfo(true)
-                            is UserState.insertedAttempt -> showUserSavedMessage()
+                            is UserState.insertedAttempt -> NavigateToNextScreen()
                             is UserState.loginErrorUser -> saveAttemptInfo(false)
                             is UserState.foundedUser -> saveAttemptInfo(true)
                             is UserState.badCredentials -> showBadCredentialsMessage()
@@ -77,6 +78,12 @@ class MainActivity : AppCompatActivity() {
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_LOCATION_PERMISSIONS_CODE)
         }
+    }
+
+    private fun NavigateToNextScreen() {
+        showUserSavedMessage()
+        startActivity(Intent(this, AttemptsListActivity::class.java)
+            .putExtra(AttemptsListActivity.USER_EMAIL, emailEditText.text.toString()))
     }
 
     private fun showUserSavedMessage() {

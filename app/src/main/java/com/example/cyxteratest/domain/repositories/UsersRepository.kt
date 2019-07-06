@@ -12,7 +12,7 @@ import io.reactivex.Observable
 
 class UsersRepository(private val userDao: UserDao, private val usersAttemptsDao: UsersAttemptsDao, private val userApi: UserApi) {
 
-    val allUsers: LiveData<List<User>> = userDao.getUsers()
+    fun getAllAttempts(email: String): LiveData<List<UserAttempt>> = usersAttemptsDao.getAttemptsByUser(email)
 
     fun insertUser(user: User): Completable {
         return Completable.fromCallable {
