@@ -10,10 +10,11 @@ import org.koin.dsl.module
 
 val daosModule: Module = module {
     factory { UsersDataBase.getDatabase(CyxteraTestApplication.appContext).userDao() }
+    factory { UsersDataBase.getDatabase(CyxteraTestApplication.appContext).attemptsDao() }
 }
 
 val repositoriesModule: Module = module {
-    factory { UsersRepository(get()) }
+    factory { UsersRepository(get(), get()) }
 }
 
 val viewModelsModule: Module = module {

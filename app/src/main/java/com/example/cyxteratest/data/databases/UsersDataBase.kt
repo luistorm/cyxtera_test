@@ -7,11 +7,13 @@ import androidx.room.RoomDatabase
 import com.example.cyxteratest.data.models.User
 import com.example.cyxteratest.data.models.UserAttempt
 import com.example.cyxteratest.data.daos.UserDao
+import com.example.cyxteratest.data.daos.UsersAttemptsDao
 
 @Database(entities = arrayOf(User::class, UserAttempt::class), version = 1)
 abstract class UsersDataBase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
+    abstract fun attemptsDao(): UsersAttemptsDao
 
     companion object {
         @Volatile

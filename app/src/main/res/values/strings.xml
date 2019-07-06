@@ -4,4 +4,11 @@
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="button_login">Login</string>
+    <string name="error_email">This field must be a valid email</string>
+    <string name="error_password">The password must have 8 chars at least, 1 uppercase, 1 lowcase, 1 number and 1 special char</string>
+    <string name="title_not_found_user">User not found</string>
+    <string name="description_not_found_user">Do you want to save this user data?</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="description_inserted_user">User data saved</string>
 </resources>
