@@ -12,7 +12,11 @@ import androidx.room.PrimaryKey
 data class UserAttempt (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "attempt_id")
-    val attemptId: Int,
+    val attemptId: Int = 0,
     @ColumnInfo(name = "user_email")
-    val userEmail: String
+    val userEmail: String,
+    @ColumnInfo(name = "type")
+    val type: Boolean,
+    @ColumnInfo(name = "attempt_date")
+    val date: String
 )

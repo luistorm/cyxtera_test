@@ -1,9 +1,15 @@
 package com.example.cyxteratest.presentation.activities
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.cyxteratest.R
 import com.example.cyxteratest.data.models.UserState
 import com.example.cyxteratest.presentation.viewmodels.MainViewModel
@@ -35,7 +41,11 @@ class MainActivity : AppCompatActivity() {
                     userState?.let {
                         when(userState) {
                             is UserState.notFoundUser -> showNotFoundUserDialog()
-                            is UserState.insertedUser -> showUserSavedMessage()
+                            is UserState.insertedUser -> saveAttemptInfo(true)
+                            is UserState.insertedAttempt -> showUserSavedMessage()
+                            is UserState.loginErrorUser -> saveAttemptInfo(false)
+                            is UserState.foundedUser -> saveAttemptInfo(true)
+                            is UserState.badCredentials -> showBadCredentialsMessage()
                         }
                     }
                 }, Throwable::printStackTrace)
@@ -55,8 +65,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun saveAttemptInfo(attemptValue: Boolean) {
+        val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+        if(ContextCompat.checkSelfPermission( this,Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
+            val location = lm!!.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            val longitude = location.longitude
+            val latitude = location.latitude
+            mainViewModel.insertAttempt(latitude, longitude, emailEditText.text.toString(), attemptValue)
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_LOCATION_PERMISSIONS_CODE)
+        }
+    }
+
     private fun showUserSavedMessage() {
         Toast.makeText(this, getString(R.string.description_inserted_user), Toast.LENGTH_LONG).show()
+    }
+
+    private fun showBadCredentialsMessage() {
+        Toast.makeText(this, getString(R.string.error_bad_credentials), Toast.LENGTH_LONG).show()
     }
 
     private fun showNotFoundUserDialog() {
@@ -76,5 +104,21 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         compositeDisposable.clear()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            REQUEST_LOCATION_PERMISSIONS_CODE -> {
+                if(grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    saveAttemptInfo(true)
+                }
+            }
+        }
+    }
+
+    companion object {
+        const val REQUEST_LOCATION_PERMISSIONS_CODE = 1001
     }
 }

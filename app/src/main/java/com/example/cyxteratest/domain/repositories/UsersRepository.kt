@@ -3,11 +3,14 @@ package com.example.cyxteratest.domain.repositories
 import androidx.lifecycle.LiveData
 import com.example.cyxteratest.data.daos.UserDao
 import com.example.cyxteratest.data.daos.UsersAttemptsDao
+import com.example.cyxteratest.data.models.TimeZoneResponse
 import com.example.cyxteratest.data.models.User
 import com.example.cyxteratest.data.models.UserAttempt
+import com.example.cyxteratest.data.network.UserApi
 import io.reactivex.Completable
+import io.reactivex.Observable
 
-class UsersRepository(private val userDao: UserDao, private val usersAttemptsDao: UsersAttemptsDao) {
+class UsersRepository(private val userDao: UserDao, private val usersAttemptsDao: UsersAttemptsDao, private val userApi: UserApi) {
 
     val allUsers: LiveData<List<User>> = userDao.getUsers()
 
@@ -17,11 +20,15 @@ class UsersRepository(private val userDao: UserDao, private val usersAttemptsDao
         }
     }
 
-    fun searchUser(email: String, password: String): LiveData<User> = userDao.searchUser(email, password)
+    fun searchUser(email: String): LiveData<User> = userDao.searchUser(email)
 
     fun insertAttempt(userAttempt: UserAttempt): Completable {
         return Completable.fromCallable {
             usersAttemptsDao.insertAttempt(userAttempt)
         }
+    }
+
+    fun getTimeZoneInfo(deviceLatitude: Double, deviceLongitude: Double): Observable<TimeZoneResponse> {
+        return userApi.getTimeZoneInfo(deviceLatitude, deviceLongitude)
     }
 }
